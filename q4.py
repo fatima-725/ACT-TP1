@@ -23,16 +23,10 @@ def merged_rooflines(roofline1, roofline2):
             prevH = maxH
 
     while i < len(roofline1):
-        x, h1 = roofline1[i]
-        if h1 != prevH:
-            updated_roofline.append((x, h1))
-            prevH = h1
+        updated_roofline.append(roofline1[i])
         i +=1
     while j < len(roofline2):
-        x, h2 = roofline2[j]
-        if h2 != prevH:
-            updated_roofline.append((x, h2))
-            prevH = h2
+        updated_roofline.append(roofline2[j])
         j += 1
 
     return updated_roofline      

@@ -23,21 +23,15 @@ def merged_rooflines(roofline1, roofline2):
             prevH = maxH
 
     while i < len(roofline1):
-        x, h1 = roofline1[i]
-        if h1 != prevH:
-            updated_roofline.append((x, h1))
-            prevH = h1
+        updated_roofline.append(roofline1[i])
         i +=1
     while j < len(roofline2):
-        x, h2 = roofline2[j]
-        if h2 != prevH:
-            updated_roofline.append((x, h2))
-            prevH = h2
+        updated_roofline.append(roofline2[j])
         j += 1
 
     return updated_roofline      
 
-def compute_roofline(buildings):
+def construct_roofline(buildings):
     if len(buildings) == 1:
         l, h, r = buildings[0]
         return [(l, h), (r, 0)]
@@ -46,12 +40,17 @@ def compute_roofline(buildings):
     left_half = buildings[:mid]
     right_half = buildings[mid:]
 
-    left_roofline = compute_roofline(left_half)
-    right_roofline = compute_roofline(right_half)
+    left_roofline = construct_roofline(left_half)
+    right_roofline = construct_roofline(right_half)
 
     return merged_rooflines(left_roofline, right_roofline)
 
 buildings = [(98, 41, 127), (154, 16, 176), (195, 89, 231), (201, 22, 215), (167, 34, 191)]
 
-roofline = compute_roofline(buildings)
+roofline = construct_roofline(buildings)
+print(roofline)
+
+buildings = [(10, 4, 20), (20, 4, 22), (15, 5, 23), (17, 4, 24), (24, 10, 100), (40, 8, 90), (8, 2, 120), (130, 7, 140)]
+
+roofline = construct_roofline(buildings)
 print(roofline)

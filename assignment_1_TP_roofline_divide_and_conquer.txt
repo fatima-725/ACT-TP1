@@ -109,55 +109,87 @@ Question 3:
             - it correctly handle each point based on the building coordinate i.e if the points are before the building's left coordinate, the roofline 
                 points are added without changing anything and same goes for points that are after the building's right coordinate.
             - it provides the correct height when the building's coordinates overlaps with the roofline i.e by finding out the maximum height at the point.
-                 
-
+              
 Question 4:
 
-    Input: roofline1, roofline2
+    Pseudocode:
+    
+        Input: roofline1, roofline2
 
-    Output: updated_roofline
+        Output: updated_roofline
 
-    Step 1:
-        h1 , h2 = 0 //height of two rooflines, initially zero
+        Step 1:
+            h1 , h2 = 0 //height of two rooflines, initially zero
 
-    Step 2:
-        i = 0
-        j = 0
-        prevH = 0
-        while i < len(roofline1) and j < len(roofline2):
-           if roofline1[i].x < roofline2[j].x:
-                x = roofline1[i].x
-                h1 = roofline1[i].y
+        Step 2:
+            i = 0
+            j = 0
+            prevH = 0
+            while i < len(roofline1) and j < len(roofline2):
+            if roofline1[i].x < roofline2[j].x:
+                    x = roofline1[i].x
+                    h1 = roofline1[i].y
+                    i++
+                else:
+                    x = roofline2[j].x
+                    h2 = roofline2[j].y
+                    j++
+
+                maxH = max(h1, h2) 
+                
+                if maxH != prevH:
+                updated_roofline.append((x, maxH))
+                prevH = maxH   
+
+        Step 3:
+            while i < len(roofline1):
+                updated_roofline.append(roofline1[i])
                 i++
-            else:
-                x = roofline2[j].x
-                h2 = roofline2[j].y
+
+            while j < len(roofline2):
+                updated_roofline.append(roofline2[j])
                 j++
 
-            maxH = max(h1, h2) 
-            
-            if maxH != prevH:
-            updated_roofline.append((x, maxH))
-            prevH = maxH   
+    Code:
+        Provided in seperate file i.e q4.py
 
-    Step 3:
-        while i < len(roofline1):
-            updated_roofline.append(roofline1[i])
-            i++
-
-        while j < len(roofline2):
-            updated_roofline.append(roofline2[j])
-            j++
-               
 Question 5:
 
-    function construct_skyline(buildings):
-        if len(building) == 1:
-            l, r, h = building[0]
-            return [(l, h), (r, 0)]
-        else:
-            mid = len(building) // 2
-            left_roofline = question3
-            right_roofline = question3
-            return question4    
-    
+    Pseudocode:
+        
+        function construct_roofline(buildings):
+            if len(buildings) == 1:
+                l, h, r = buildings[0]
+                return [(l, h), (r, 0)]
+            else:
+                mid = len(building) // 2
+                left_roofline = construct_roofline(buildings[:mid])
+                right_roofline = construct_roofline(buildings[mid:])
+                
+                return merged_roofline(left_roofline, right_roofline) //solution of question 4
+
+    Code:                 
+        Provided in a seperate file i.e q5.py
+
+    Complexity calculations using the Master Theorem:
+        T(n) = aT(n/b) + O(n^d)
+        
+        In our case,
+            a = 2 i.e number of subproblems
+            b = 2 i.e problem size
+            d = 1  
+
+        Thus,
+            T(n) = 2T(n/2) + O(n^1)
+            T(n) = 2T(n/2) + O(n)    
+
+        Since, logba = log22 =1
+
+        The case complexity is 
+            T(n) = O(n^d log n) = O(n log n)
+
+
+    Correction Elements:
+        - correctly merges two rooflines by comparing the x-coordinates and choosing the tallest height.
+        - efficiently divides the problem into sub-problems
+        - correct base-case ensuring that the roofline for a single building is generated correctly.  
