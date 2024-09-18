@@ -1,0 +1,163 @@
+Submitted by: Fatima Tuz Zahra
+
+Question 1:
+
+    Question 1.1:
+
+        Not valid
+        Not valid
+        Valid
+        Not valid
+        Not valid
+
+    Question 1.2:
+
+        The x-coordinates should be in increasing order.
+        The change must be either vertical (x-coordinate changes but the y-coordinate remains same) or horizontal (y-coordinate changes but the x-coordinate remains same).
+        Should start and end at y=0.
+
+    Question 1.3:
+        (1, 1)(5, 13)(9, 20)(12, 27)(16, 3)(19, 0)(22, 3)(25, 0) is a more compact internal representation of following roofline:
+            (1, 0)(1, 1)(5, 1)(5, 13)(9, 13)(9, 20)(12, 20)(12, 27)(16, 27)(16, 3)(19, 3)(19, 0)(22, 0)(22, 3)(25, 3)(25, 0) 
+
+        From detailed to compact representation:
+            Ignore the starting point i.e when y=0 as this does not provide significant information.
+            Remove intermediate points as there is no change in height i.e they continue a horizontal line.
+            Keep points where there is a vertical change.
+
+        From compact to detailed representation:
+            Add the starting point as (x1, 0) and then add the first tuple of the compact roofline.
+            After that, between each tuple, add one tuple in between which would contain the x-coordinate of the next tuple and the y-coordinate of the previous tuple.
+
+Question 2:
+    
+    Pseudocode:
+        Input : 
+            a list of building with (l, r, h) where:
+                l is the start point of the building in x-axis
+                r is the ending point of the building in x-axis
+                h is the height of the building
+
+        Output:
+            A list of points
+
+        Step 1:
+            Let list[w][h]  be an empty list with size of maximum width and height.
+
+        Step 2:
+            For l, r, h in building:
+                for x in range(l, r):
+                    for y in range(0, h):
+                        list[x][y] = 1
+
+        Step 3:
+            Let roofline[] be an empty list which would contain the skyline points.
+
+        Step 4:
+            prevH = 0
+            for x in range(0, w):
+                maxH = 0
+                y = h
+                while y>=0:
+                    if  list[x][y] == 1:
+                        maxH +=1
+                        break
+                    y -= 1
+
+                If maxH != prevH:
+                    roofline.append((x, maxH))
+                    prevH = maxH
+            return roofline
+
+    The worst-case complexity of this approach will be O(w x h). 
+    
+    The disadvantages of this approach are:
+        Not time efficient - as it treats each pixel independently i.e it performs redundant opertions even if the pixels are part of the same building and the roofline doesn't change
+        Not memory efficient - as it needs a lot of memory to store the entire grid, so in case the value of w and h are large, this approach would take a lot of memory.
+
+Question 3:
+    
+    Pseudocode:
+        Input:
+            roofline
+            new building(l, r, h) to be added
+
+        Output:
+            Updated roofline 
+
+        Step 1:
+            Let new_roofline would be a new empty list 
+
+        Step 2:
+            for i in len(roofline):
+                if roofline[i].x < l
+                    new_roofline.append(roofline[i])    
+
+                elif roofline[i].x > l && <= r:
+                    if roofline[i].y >= h:
+                        new_roofline.append(roofline[i])
+                    else:
+                        new_roofline.append((roofline[i].x, h))
+
+                else:
+                    break          
+
+    The complexity of the algorithm is O(n) as the algorithm traverses each point exactly once.
+
+    Justification:
+        The algorithm is correct because:
+            - it correctly handle each point based on the building coordinate i.e if the points are before the building's left coordinate, the roofline 
+                points are added without changing anything and same goes for points that are after the building's right coordinate.
+            - it provides the correct height when the building's coordinates overlaps with the roofline i.e by finding out the maximum height at the point.
+                 
+
+Question 4:
+
+    Input: roofline1, roofline2
+
+    Output: updated_roofline
+
+    Step 1:
+        h1 , h2 = 0 //height of two rooflines, initially zero
+
+    Step 2:
+        i = 0
+        j = 0
+        prevH = 0
+        while i < len(roofline1) and j < len(roofline2):
+           if roofline1[i].x < roofline2[j].x:
+                x = roofline1[i].x
+                h1 = roofline1[i].y
+                i++
+            else:
+                x = roofline2[j].x
+                h2 = roofline2[j].y
+                j++
+
+            maxH = max(h1, h2) 
+            
+            if maxH != prevH:
+            updated_roofline.append((x, maxH))
+            prevH = maxH   
+
+    Step 3:
+        while i < len(roofline1):
+            updated_roofline.append(roofline1[i])
+            i++
+
+        while j < len(roofline2):
+            updated_roofline.append(roofline2[j])
+            j++
+               
+Question 5:
+
+    function construct_skyline(buildings):
+        if len(building) == 1:
+            l, r, h = building[0]
+            return [(l, h), (r, 0)]
+        else:
+            mid = len(building) // 2
+            left_roofline = question3
+            right_roofline = question3
+            return question4    
+    
